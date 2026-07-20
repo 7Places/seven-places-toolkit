@@ -14,10 +14,14 @@ final class Application
 
     /** @var array<string,mixed> */
     private array $pluginData = [];
+    private ModuleRegistry $moduleRegistry;
+    private AssetManager $assetManager;
 
     private function __construct(string $pluginFile)
     {
         $this->pluginFile = $pluginFile;
+        $this->moduleRegistry = new ModuleRegistry();
+        $this->assetManager = new AssetManager();
     }
 
     public static function boot(string $pluginFile): self
@@ -37,12 +41,22 @@ final class Application
 
     private function registerModules(): void
     {
-      (new ModuleRegistry())
-        ->add(new DiagnosticsModule($this))
+    (new ModuleRegistry())
+        ->add(...$this->modules())
         ->boot();
     }
 
-    private function initialize(): void
+    /**
+    * @return array<\SPT\Contracts\ModuleInterface>
+    */
+    private function modules(): array
+    {
+      return [
+        new DiagnosticsModule($this),
+      ];
+    }
+
+    public function initialize(): void
     {
       $this->loadPluginData();
 
@@ -60,6 +74,11 @@ final class Application
             false,
             false
         );
+    }
+
+    public function assets(): AssetManager
+    {
+        return $this->assetManager;
     }
 
     public function pluginFile(): string

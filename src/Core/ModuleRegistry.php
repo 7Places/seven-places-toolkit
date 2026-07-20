@@ -13,12 +13,14 @@ final class ModuleRegistry
      */
     private array $modules = [];
 
-    public function add(ModuleInterface $module): self
-    {
+    public function add(ModuleInterface ...$modules): self
+{
+    foreach ($modules as $module) {
         $this->modules[] = $module;
-
-        return $this;
     }
+
+    return $this;
+}
 
     public function boot(): void
     {
