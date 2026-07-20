@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SPT\Core;
 
 use SPT\Modules\Diagnostics\DiagnosticsModule;
+use SPT\Services\AssetManager;
 
 final class Application
 {
@@ -21,7 +22,7 @@ final class Application
     {
         $this->pluginFile = $pluginFile;
         $this->moduleRegistry = new ModuleRegistry();
-        $this->assetManager = new AssetManager();
+        $this->assetManager = new AssetManager($this);
     }
 
     public static function boot(string $pluginFile): self
@@ -41,7 +42,7 @@ final class Application
 
     private function registerModules(): void
     {
-    (new ModuleRegistry())
+    $this->moduleRegistry
         ->add(...$this->modules())
         ->boot();
     }
