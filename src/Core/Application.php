@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace SPT\Core;
 
+use SPT\Modules\Diagnostics\DiagnosticsModule;
+
 final class Application
 {
     private static ?self $instance = null;
@@ -20,32 +22,31 @@ final class Application
 
     public static function boot(string $pluginFile): self
     {
-        if (self::$instance === null) {
-            self::$instance = new self($pluginFile);
-            self::$instance->register();
-        }
-
-        return self::$instance;
+    if (self::$instance === null) {
+        self::$instance = new self($pluginFile);
+        self::$instance->registerHooks();
     }
 
-    private function register(): void
-    {
-        add_action('plugins_loaded', [$this, 'initialize']);
+      return self::$instance;
     }
 
-    public function initialize(): void
+    private function registerHooks(): void
     {
-        $this->loadPluginData();
+      add_action('plugins_loaded', [$this, 'initialize']);
+    }
 
-        /**
-         * Future initialization sequence
-         *
-         * $this->registerModules();
-         * $this->registerAssets();
-         * $this->registerAdmin();
-         * $this->registerRest();
-         * $this->registerUpdater();
-         */
+    private function registerModules(): void
+    {
+      (new ModuleRegistry())
+        ->add(new DiagnosticsModule($this))
+        ->boot();
+    }
+
+    private function initialize(): void
+    {
+      $this->loadPluginData();
+
+      $this->registerModules();
     }
 
     private function loadPluginData(): void
