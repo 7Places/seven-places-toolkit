@@ -1,1 +1,14 @@
-{"name":"sevenplaces/toolkit","autoload":{"psr-4":{"SevenPlacesToolkit\\\\":"inc/"}}}
+{
+  "name": "7places/seven-places-toolkit",
+  "description": "Professional WordPress toolkit for agencies.",
+  "type": "wordpress-plugin",
+  "license": "proprietary",
+  "require": {
+    "php": "^8.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "SPT\\": "src/"
+    }
+  }
+}
