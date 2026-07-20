@@ -41,5 +41,17 @@ final class DiagnosticsModule implements ModuleInterface
             '<div class="notice notice-success spt-diagnostics-notice"><p>Seven Places Toolkit initialized successfully (v%s)</p></div>',
             esc_html($this->app->version())
         );
+        $this->app->settings()->set(
+            'test',
+            'Hello World'
+        );
+
+        $value = $this->app->settings()->get(
+            'test'
+        );
+
+        error_log($value);
     }
+
+
 }
