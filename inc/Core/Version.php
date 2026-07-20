@@ -1,1 +1,0 @@
-<?php namespace SevenPlacesToolkit\Core; class Version{const VERSION='0.1.0';}

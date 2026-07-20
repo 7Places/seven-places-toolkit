@@ -1,11 +1,22 @@
 <?php
-declare(strict_types=1);
 /**
  * Plugin Name: Seven Places Toolkit
- * Version: 0.1.0
+ * Plugin URI: https://github.com/7Places/seven-places-toolkit
+ * Description: Professional toolkit for WordPress agencies.
+ * Version: 0.2.0
+ * Requires at least: 6.8
+ * Requires PHP: 8.2
  * Author: Seven Places Productions + Jamon Abercrombie
+ * License: Proprietary
+ * Text Domain: seven-places-toolkit
  */
-if(!defined('ABSPATH')) exit;
-require __DIR__.'/inc/Core/Autoloader.php';
-\SevenPlacesToolkit\Core\Autoloader::register();
-\SevenPlacesToolkit\Core\Plugin::boot();
+
+declare(strict_types=1);
+
+if (! defined('ABSPATH')) {
+	exit;
+}
+
+require_once __DIR__ . '/vendor/autoload.php';
+
+SPT\Core\Application::boot(__FILE__);
