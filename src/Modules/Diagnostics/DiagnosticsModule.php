@@ -6,6 +6,7 @@ namespace SPT\Modules\Diagnostics;
 
 use SPT\Contracts\ModuleInterface;
 use SPT\Core\Application;
+use SPT\Admin\AdminPage;
 
 final class DiagnosticsModule implements ModuleInterface
 {
@@ -25,6 +26,16 @@ final class DiagnosticsModule implements ModuleInterface
             'admin_enqueue_scripts',
             [$this, 'enqueueAssets']
         );
+
+        $this->app->admin()->addPage(
+            new AdminPage(
+                title: 'Diagnostics',
+                menuTitle: 'Diagnostics',
+                capability: 'manage_options',
+                slug: 'spt-diagnostics',
+                callback: [$this, 'renderPage'],
+            )
+        );
     }
 
     public function enqueueAssets(): void
@@ -41,16 +52,28 @@ final class DiagnosticsModule implements ModuleInterface
             '<div class="notice notice-success spt-diagnostics-notice"><p>Seven Places Toolkit initialized successfully (v%s)</p></div>',
             esc_html($this->app->version())
         );
+
         $this->app->settings()->set(
             'test',
             'Hello World'
         );
 
-        $value = $this->app->settings()->get(
-            'test'
+        error_log(
+            $this->app->settings()->get('test')
         );
+    }
 
-        error_log($value);
+
+    public function renderPage(): void
+    {
+        $this->app
+            ->views()
+            ->render(
+                __DIR__ . '/views/diagnostics.php',
+                [
+                    'app' => $this->app,
+                ]
+            );
     }
 
 
