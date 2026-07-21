@@ -72,11 +72,37 @@ final readonly class WordPressUpdater
      *
      * @return mixed
      */
-    public function pluginInformation(
-        mixed $result,
-        string $action,
-        object $args,
-    ): mixed {
-        return $result;
-    }
+     public function pluginInformation(
+         mixed $result,
+         string $action,
+         object $args,
+     ): mixed {
+         if (
+             $action !== 'plugin_information'
+             || !isset($args->slug)
+             || $args->slug !== $this->app->slug()
+         ) {
+             return $result;
+         }
+
+         try {
+             $update = $this->app->updater()->check();
+         } catch (\Throwable) {
+             return $result;
+         }
+
+         return (object) [
+             'name'          => $this->app->name(),
+             'slug'          => $this->app->slug(),
+             'version'       => $update->latestVersion(),
+             'author'        => '<a href="https://sevenplacesproductions.com">Seven Places Productions</a>',
+             'homepage'      => $update->releaseUrl(),
+             'download_link' => $update->downloadUrl(),
+             'last_updated'  => $update->publishedAt(),
+             'sections'      => [
+                 'description' => 'Seven Places Toolkit',
+                 'changelog'   => nl2br($update->releaseNotes()),
+             ],
+         ];
+     }
 }
