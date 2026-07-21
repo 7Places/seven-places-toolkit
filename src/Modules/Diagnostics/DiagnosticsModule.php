@@ -48,14 +48,32 @@ final class DiagnosticsModule implements ModuleInterface
 
     public function adminNotice(): void
     {
-        printf(
-            '<div class="notice notice-success spt-diagnostics-notice"><p>Seven Places Toolkit initialized successfully (v%s)</p></div>',
-            esc_html($this->app->version())
-        );
+        $status = get_option('spt_admin_notice');
 
-        $this->app->settings()->set(
-            'test',
-            'Hello World'
+        if (!$status) {
+            return;
+        }
+
+        delete_option('spt_admin_notice');
+
+        $message = match ($status) {
+            'activated' => sprintf(
+                'Seven Places Toolkit activated successfully (v%s).',
+                $this->app->version()
+            ),
+            'updated' => sprintf(
+                'Seven Places Toolkit updated successfully (v%s).',
+                $this->app->version()
+            ),
+            default => sprintf(
+                'Seven Places Toolkit initialized successfully (v%s).',
+                $this->app->version()
+            ),
+        };
+
+        printf(
+            '<div class="notice notice-success is-dismissible"><p>%s</p></div>',
+            esc_html($message)
         );
     }
 

@@ -260,6 +260,11 @@ final readonly class WordPressUpdater
              $this->app
                  ->github()
                  ->clearCache();
+
+                 update_option(
+                   'spt_admin_notice',
+                   'updated'
+            );
          }
 
 }
