@@ -18,9 +18,27 @@
 declare(strict_types=1);
 
 if (! defined('ABSPATH')) {
-	exit;
+    exit;
 }
 
 require_once __DIR__ . '/vendor/autoload.php';
+
+/*
+|--------------------------------------------------------------------------
+| Plugin Activation
+|--------------------------------------------------------------------------
+|
+| Queue a one-time admin notice after activation.
+|
+*/
+register_activation_hook(
+    __FILE__,
+    static function (): void {
+        update_option(
+            'spt_admin_notice',
+            'activated'
+        );
+    }
+);
 
 SPT\Core\Application::boot(__FILE__);
