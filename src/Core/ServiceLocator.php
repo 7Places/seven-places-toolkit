@@ -11,6 +11,7 @@ use SPT\Services\ViewManager;
 use SPT\Infrastructure\Http\HttpClient;
 use SPT\Infrastructure\GitHub\GitHubClient;
 use SPT\Infrastructure\GitHub\GitHubUpdater;
+use SPT\Infrastructure\GitHub\WordPressUpdater;
 
 final class ServiceLocator
 {
@@ -82,6 +83,13 @@ final class ServiceLocator
         /** @var GitHubUpdater */
         return $this->instances[GitHubUpdater::class]
             ??= new GitHubUpdater($this->app);
+    }
+
+    public function wordPressUpdater(): WordPressUpdater
+    {
+        /** @var WordPressUpdater */
+        return $this->instances[WordPressUpdater::class]
+            ??= new WordPressUpdater($this->app);
     }
 
 }
