@@ -10,6 +10,7 @@ use SPT\Services\AssetManager;
 use SPT\Services\SettingsManager;
 use SPT\Services\ViewManager;
 use SPT\Infrastructure\Http\HttpClient;
+use SPT\Infrastructure\GitHub\GitHubClient;
 
 final class Application
 {
@@ -146,10 +147,15 @@ final class Application
     {
         return $this->services->views();
     }
-    
+
     public function http(): HttpClient
     {
         return $this->services->http();
+    }
+
+    public function github(): GitHubClient
+    {
+        return $this->services->github();
     }
 
     /*

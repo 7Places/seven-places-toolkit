@@ -9,6 +9,7 @@ use SPT\Services\AssetManager;
 use SPT\Services\SettingsManager;
 use SPT\Services\ViewManager;
 use SPT\Infrastructure\Http\HttpClient;
+use SPT\Infrastructure\GitHub\GitHubClient;
 
 final class ServiceLocator
 {
@@ -67,4 +68,12 @@ final class ServiceLocator
         return $this->instances[HttpClient::class]
             ??= new HttpClient($this->app);
     }
+
+    public function github(): GitHubClient
+    {
+        /** @var GitHubClient */
+        return $this->instances[GitHubClient::class]
+            ??= new GitHubClient($this->app);
+    }
+
 }
