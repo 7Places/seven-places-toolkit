@@ -88,10 +88,6 @@ final readonly class WordPressUpdater
 
          try {
              $update = $this->app->updater()->check();
-             error_log('===== SPT UPDATE =====');
-             error_log('Installed: ' . $update->currentVersion());
-             error_log('Latest: ' . $update->latestVersion());
-             error_log('Available: ' . ($update->available() ? 'YES' : 'NO'));
          } catch (\Throwable $e) {
              error_log('SPT pluginInformation exception: ' . $e->getMessage());
 
