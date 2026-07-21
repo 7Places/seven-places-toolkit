@@ -9,6 +9,9 @@ use SPT\Modules\Diagnostics\DiagnosticsModule;
 use SPT\Services\AssetManager;
 use SPT\Services\SettingsManager;
 use SPT\Services\ViewManager;
+use SPT\Infrastructure\Http\HttpClient;
+use SPT\Infrastructure\GitHub\GitHubClient;
+use SPT\Infrastructure\GitHub\GitHubUpdater;
 
 final class Application
 {
@@ -144,6 +147,21 @@ final class Application
     public function views(): ViewManager
     {
         return $this->services->views();
+    }
+
+    public function http(): HttpClient
+    {
+        return $this->services->http();
+    }
+
+    public function github(): GitHubClient
+    {
+        return $this->services->github();
+    }
+
+    public function updater(): GitHubUpdater
+    {
+        return $this->services->updater();
     }
 
     /*
