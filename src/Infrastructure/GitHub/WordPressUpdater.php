@@ -45,7 +45,6 @@ final readonly class WordPressUpdater
          try {
              $update = $this->app->updater()->check();
          } catch (\Throwable $e) {
-             error_log('SPT updater exception: ' . $e->getMessage());
              return $transient;
          }
 
@@ -89,7 +88,6 @@ final readonly class WordPressUpdater
          try {
              $update = $this->app->updater()->check();
          } catch (\Throwable $e) {
-             error_log('SPT pluginInformation exception: ' . $e->getMessage());
 
              return $result;
          }
