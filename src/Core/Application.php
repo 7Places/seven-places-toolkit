@@ -12,6 +12,7 @@ use SPT\Services\ViewManager;
 use SPT\Infrastructure\Http\HttpClient;
 use SPT\Infrastructure\GitHub\GitHubClient;
 use SPT\Infrastructure\GitHub\GitHubUpdater;
+use SPT\Infrastructure\GitHub\WordPressUpdater;
 
 final class Application
 {
@@ -52,6 +53,7 @@ final class Application
 
     public function initialize(): void
     {
+        $this->wordPressUpdater()->register();
         $this->registerModules();
     }
 
@@ -162,6 +164,11 @@ final class Application
     public function updater(): GitHubUpdater
     {
         return $this->services->updater();
+    }
+
+    public function wordPressUpdater(): WordPressUpdater
+    {
+        return $this->services->wordPressUpdater();
     }
 
     /*
