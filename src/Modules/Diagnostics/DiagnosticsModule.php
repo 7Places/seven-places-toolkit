@@ -11,7 +11,7 @@ use SPT\Admin\AdminPage;
 final class DiagnosticsModule implements ModuleInterface
 {
     public function __construct(
-        private readonly Application $app
+        private readonly Application $app,
     ) {
     }
 
@@ -64,16 +64,40 @@ final class DiagnosticsModule implements ModuleInterface
     }
 
 
+    private function diagnostics(): array
+    {
+        return [
+            'framework' => [
+                'Name'         => $this->app->name(),
+                'Version'      => $this->app->version(),
+                'Plugin File'  => $this->app->pluginFile(),
+                'Plugin Path'  => $this->app->pluginPath(),
+                'Plugin URL'   => $this->app->pluginUrl(),
+                'Text Domain'  => $this->app->textDomain(),
+                'Slug'         => $this->app->slug(),
+            ],
+
+            'environment' => [
+                'PHP Version'        => PHP_VERSION,
+                'WordPress Version'  => get_bloginfo('version'),
+                'WP_DEBUG'           => WP_DEBUG ? 'Yes' : 'No',
+                'Multisite'          => is_multisite() ? 'Yes' : 'No',
+                'Memory Limit'       => WP_MEMORY_LIMIT,
+            ],
+
+            'settings' => $this->app->settings()->all(),
+        ];
+    }
+
+
     public function renderPage(): void
     {
-        $this->app
-            ->views()
-            ->render(
-                __DIR__ . '/views/diagnostics.php',
-                [
-                    'app' => $this->app,
-                ]
-            );
+        $this->app->views()->render(
+            __DIR__ . '/views/diagnostics.php',
+            [
+                'diagnostics' => $this->diagnostics(),
+            ]
+        );
     }
 
 
