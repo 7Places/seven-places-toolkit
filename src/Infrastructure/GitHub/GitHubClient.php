@@ -40,12 +40,13 @@ final readonly class GitHubClient
             );
 
         if ($response->failed()) {
-            throw new RuntimeException(
-                sprintf(
-                    'GitHub API returned HTTP %d.',
-                    $response->status()
-                )
-            );
+          throw new RuntimeException(
+              sprintf(
+                  'GitHub API request to "%s" failed (%d).',
+                  $endpoint,
+                  $response->status()
+              )
+          );
         }
 
         $json = $response->json();
