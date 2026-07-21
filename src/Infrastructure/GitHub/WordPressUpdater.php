@@ -33,37 +33,38 @@ final readonly class WordPressUpdater
      *
      * @return object
      */
-    public function checkForUpdates(object $transient): object
-    {
-        if (
-            !isset($transient->checked)
-            || !is_array($transient->checked)
-        ) {
-            return $transient;
-        }
+     public function checkForUpdates(object $transient): object
+     {
+         if (
+             !isset($transient->checked)
+             || !is_array($transient->checked)
+         ) {
+             return $transient;
+         }
 
-        try {
-            $update = $this->app->updater()->check();
-        } catch (\Throwable) {
-            return $transient;
-        }
+         try {
+             $update = $this->app->updater()->check();
+         } catch (\Throwable $e) {
+             error_log('SPT updater exception: ' . $e->getMessage());
+             return $transient;
+         }
 
-        if (!$update->available()) {
-            return $transient;
-        }
+         if (!$update->available()) {
+             return $transient;
+         }
 
-        $plugin = $this->app->basename();
+         $plugin = $this->app->basename();
 
-        $transient->response[$plugin] = (object) [
-            'slug'        => $this->app->slug(),
-            'plugin'      => $plugin,
-            'new_version' => $update->latestVersion(),
-            'url'         => $update->releaseUrl(),
-            'package'     => $update->downloadUrl(),
-        ];
+         $transient->response[$plugin] = (object) [
+             'slug'        => $this->app->slug(),
+             'plugin'      => $plugin,
+             'new_version' => $update->latestVersion(),
+             'url'         => $update->releaseUrl(),
+             'package'     => $update->downloadUrl(),
+         ];
 
-        return $transient;
-    }
+         return $transient;
+     }
 
     /**
      * @param mixed  $result
@@ -87,7 +88,9 @@ final readonly class WordPressUpdater
 
          try {
              $update = $this->app->updater()->check();
-         } catch (\Throwable) {
+         } catch (\Throwable $e) {
+             error_log('SPT pluginInformation exception: ' . $e->getMessage());
+
              return $result;
          }
 

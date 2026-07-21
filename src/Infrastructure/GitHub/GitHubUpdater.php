@@ -37,10 +37,28 @@ final readonly class GitHubUpdater
             currentVersion: $currentVersion,
             latestVersion: $latestVersion,
             releaseName: (string) ($release['name'] ?? ''),
-            downloadUrl: (string) ($release['zipball_url'] ?? ''),
+            downloadUrl: $this->downloadUrl($release),
             releaseUrl: (string) ($release['html_url'] ?? ''),
             publishedAt: (string) ($release['published_at'] ?? ''),
             releaseNotes: (string) ($release['body'] ?? ''),
         );
     }
+
+    private function downloadUrl(array $release): string
+    {
+        foreach (($release['assets'] ?? []) as $asset) {
+            if (
+                isset($asset['name'], $asset['browser_download_url'])
+                && str_ends_with(
+                    strtolower((string) $asset['name']),
+                    '.zip'
+                )
+            ) {
+                return (string) $asset['browser_download_url'];
+            }
+        }
+
+        return (string) ($release['zipball_url'] ?? '');
+    }
+
 }

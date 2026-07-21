@@ -12,6 +12,7 @@ use SPT\Infrastructure\Http\HttpClient;
 use SPT\Infrastructure\GitHub\GitHubClient;
 use SPT\Infrastructure\GitHub\GitHubUpdater;
 use SPT\Infrastructure\GitHub\WordPressUpdater;
+use SPT\Infrastructure\GitHub\GitHubInstaller;
 
 final class ServiceLocator
 {
@@ -90,6 +91,13 @@ final class ServiceLocator
         /** @var WordPressUpdater */
         return $this->instances[WordPressUpdater::class]
             ??= new WordPressUpdater($this->app);
+    }
+
+    public function installer(): GitHubInstaller
+    {
+        /** @var GitHubInstaller */
+        return $this->instances[GitHubInstaller::class]
+            ??= new GitHubInstaller($this->app);
     }
 
 }

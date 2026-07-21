@@ -13,6 +13,7 @@ use SPT\Infrastructure\Http\HttpClient;
 use SPT\Infrastructure\GitHub\GitHubClient;
 use SPT\Infrastructure\GitHub\GitHubUpdater;
 use SPT\Infrastructure\GitHub\WordPressUpdater;
+use SPT\Infrastructure\GitHub\GitHubInstaller;
 
 final class Application
 {
@@ -54,6 +55,7 @@ final class Application
     public function initialize(): void
     {
         $this->wordPressUpdater()->register();
+        $this->installer()->register();
         $this->registerModules();
     }
 
@@ -169,6 +171,11 @@ final class Application
     public function wordPressUpdater(): WordPressUpdater
     {
         return $this->services->wordPressUpdater();
+    }
+
+    public function installer(): GitHubInstaller
+    {
+        return $this->services->installer();
     }
 
     /*
