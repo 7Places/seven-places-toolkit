@@ -6,6 +6,9 @@ namespace SPT\Core;
 
 use SPT\Modules\Diagnostics\DiagnosticsModule;
 use SPT\Services\AssetManager;
+use SPT\Services\SettingsManager;
+use SPT\Admin\AdminPageManager;
+use SPT\Services\ViewManager;
 
 final class Application
 {
@@ -17,12 +20,19 @@ final class Application
     private array $pluginData = [];
     private ModuleRegistry $moduleRegistry;
     private AssetManager $assetManager;
+    private SettingsManager $settingsManager;
+    private AdminPageManager $admin;
+    private ViewManager $views;
 
     private function __construct(string $pluginFile)
     {
         $this->pluginFile = $pluginFile;
         $this->moduleRegistry = new ModuleRegistry();
         $this->assetManager = new AssetManager($this);
+        $this->settingsManager = new SettingsManager($this);
+        $this->views = new ViewManager();
+        $this->admin = new AdminPageManager();
+        $this->admin->register();
     }
 
     public static function boot(string $pluginFile): self
@@ -130,5 +140,20 @@ final class Application
     public function assetUrl(string $asset): string
     {
         return $this->pluginUrl() . 'assets/' . ltrim($asset, '/');
+    }
+
+    public function settings(): SettingsManager
+    {
+        return $this->settingsManager;
+    }
+
+    public function admin(): AdminPageManager
+    {
+        return $this->admin;
+    }
+
+    public function views(): ViewManager
+    {
+        return $this->views;
     }
 }
