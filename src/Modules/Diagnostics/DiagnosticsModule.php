@@ -57,10 +57,6 @@ final class DiagnosticsModule implements ModuleInterface
             'test',
             'Hello World'
         );
-
-        error_log(
-            $this->app->settings()->get('test')
-        );
     }
 
 

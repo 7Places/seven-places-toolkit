@@ -30,8 +30,6 @@ final readonly class GitHubInstaller
         array $hookExtra,
     ): string {
 
-        error_log('SPT sourceSelection reached');
-
         if (
             !isset($hookExtra['plugin'])
             || $hookExtra['plugin'] !== $this->app->basename()
