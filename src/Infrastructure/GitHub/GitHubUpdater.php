@@ -29,36 +29,14 @@ final readonly class GitHubUpdater
         );
 
         return new UpdateInfo(
-            available: version_compare(
-                $latestVersion,
-                $currentVersion,
-                '>'
-            ),
-            currentVersion: $currentVersion,
+            currentVersion: $this->app->version(),
             latestVersion: $latestVersion,
-            releaseName: (string) ($release['name'] ?? ''),
-            downloadUrl: $this->downloadUrl($release),
+            available: version_compare($latestVersion, $this->app->version(), '>'),
+            downloadUrl: (string) ($release['zipball_url'] ?? ''),
             releaseUrl: (string) ($release['html_url'] ?? ''),
             publishedAt: (string) ($release['published_at'] ?? ''),
             releaseNotes: (string) ($release['body'] ?? ''),
         );
-    }
-
-    private function downloadUrl(array $release): string
-    {
-        foreach (($release['assets'] ?? []) as $asset) {
-            if (
-                isset($asset['name'], $asset['browser_download_url'])
-                && str_ends_with(
-                    strtolower((string) $asset['name']),
-                    '.zip'
-                )
-            ) {
-                return (string) $asset['browser_download_url'];
-            }
-        }
-
-        return (string) ($release['zipball_url'] ?? '');
     }
 
 }

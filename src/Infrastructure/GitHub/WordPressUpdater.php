@@ -13,19 +13,142 @@ final readonly class WordPressUpdater
     ) {
     }
 
-    public function register(): void
-    {
-        add_filter(
-            'pre_set_site_transient_update_plugins',
-            [$this, 'checkForUpdates']
-        );
+    <?php
 
-        add_filter(
-            'plugins_api',
-            [$this, 'pluginInformation'],
-            10,
-            3
-        );
+    declare(strict_types=1);
+
+    namespace SPT\Infrastructure\GitHub;
+
+    use RuntimeException;
+    use SPT\Core\Application;
+
+    final readonly class GitHubClient
+    {
+        private const API = 'https://api.github.com';
+
+        /**
+         * Cache key for the latest GitHub release.
+         */
+        private const LATEST_RELEASE_CACHE = 'spt_github_latest_release';
+
+        /**
+         * Cache lifetime (6 hours).
+         */
+        private const CACHE_TTL = 6 * HOUR_IN_SECONDS;
+
+        public function __construct(
+            private Application $app,
+        ) {
+        }
+
+        /**
+         * Returns the configured repository.
+         */
+        public function repository(): string
+        {
+            $repository = trim(
+                $this->app
+                    ->metadata()
+                    ->header('GitHubRepository')
+            );
+
+            if ($repository === '') {
+                throw new RuntimeException(
+                    'GitHubRepository plugin header is missing.'
+                );
+            }
+
+            return $repository;
+        }
+
+        /**
+         * Returns the latest published release.
+         *
+         * @return array<string,mixed>
+         */
+        public function latestRelease(): array
+        {
+            $cached = get_transient(self::LATEST_RELEASE_CACHE);
+
+            if (is_array($cached)) {
+                return $cached;
+            }
+
+            $release = $this->get(
+                '/repos/' . $this->repository() . '/releases/latest'
+            );
+
+            set_transient(
+                self::LATEST_RELEASE_CACHE,
+                $release,
+                self::CACHE_TTL
+            );
+
+            return $release;
+        }
+
+        /**
+         * Clears the cached release information.
+         */
+        public function clearCache(): void
+        {
+            delete_transient(self::LATEST_RELEASE_CACHE);
+        }
+
+        /**
+         * Returns a release by tag.
+         *
+         * @return array<string,mixed>
+         */
+        public function releaseByTag(string $tag): array
+        {
+            return $this->get(
+                '/repos/' . $this->repository() . '/releases/tags/' . rawurlencode($tag)
+            );
+        }
+
+        /**
+         * Returns repository information.
+         *
+         * @return array<string,mixed>
+         */
+        public function repositoryInfo(): array
+        {
+            return $this->get(
+                '/repos/' . $this->repository()
+            );
+        }
+
+        /**
+         * Executes a GitHub API GET request.
+         *
+         * @return array<string,mixed>
+         */
+        private function get(string $endpoint): array
+        {
+            $response = $this->app
+                ->http()
+                ->get(self::API . $endpoint);
+
+            if ($response->failed()) {
+                throw new RuntimeException(
+                    sprintf(
+                        'GitHub API request failed (%d).',
+                        $response->status()
+                    )
+                );
+            }
+
+            $json = $response->json();
+
+            if (!is_array($json)) {
+                throw new RuntimeException(
+                    'GitHub returned invalid JSON.'
+                );
+            }
+
+            return $json;
+        }
     }
 
     /**
@@ -105,5 +228,38 @@ final readonly class WordPressUpdater
                  'changelog'   => nl2br($update->releaseNotes()),
              ],
          ];
-     }
+
+
+         /**
+          * Clears the cached GitHub release after this plugin updates.
+          *
+          * @param \WP_Upgrader $upgrader
+          * @param array<string,mixed> $options
+          */
+         public function clearGitHubCache(
+             \WP_Upgrader $upgrader,
+             array $options,
+         ): void {
+             if (
+                 ($options['action'] ?? '') !== 'update'
+                 || ($options['type'] ?? '') !== 'plugin'
+             ) {
+                 return;
+             }
+
+             $plugins = $options['plugins'] ?? [];
+
+             if (!is_array($plugins)) {
+                 return;
+             }
+
+             if (!in_array($this->app->basename(), $plugins, true)) {
+                 return;
+             }
+
+             $this->app
+                 ->github()
+                 ->clearCache();
+         }
+
 }
