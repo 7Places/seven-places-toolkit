@@ -1,0 +1,62 @@
+<?php
+
+declare(strict_types=1);
+
+namespace SPT\Core;
+
+use SPT\Admin\AdminPageManager;
+use SPT\Services\AssetManager;
+use SPT\Services\SettingsManager;
+use SPT\Services\ViewManager;
+
+final class ServiceLocator
+{
+    /**
+     * Cached service instances.
+     *
+     * @var array<class-string,object>
+     */
+    private array $instances = [];
+
+    public function __construct(
+        private readonly Application $app,
+    ) {
+    }
+
+    public function assets(): AssetManager
+    {
+        /** @var AssetManager */
+        return $this->instances[AssetManager::class]
+            ??= new AssetManager($this->app);
+    }
+
+    public function settings(): SettingsManager
+    {
+        /** @var SettingsManager */
+        return $this->instances[SettingsManager::class]
+            ??= new SettingsManager($this->app);
+    }
+
+    public function views(): ViewManager
+    {
+        /** @var ViewManager */
+        return $this->instances[ViewManager::class]
+            ??= new ViewManager();
+    }
+
+    public function admin(): AdminPageManager
+    {
+        /** @var AdminPageManager */
+        return $this->instances[AdminPageManager::class]
+            ??= $this->createAdmin();
+    }
+
+    private function createAdmin(): AdminPageManager
+    {
+        $admin = new AdminPageManager();
+
+        $admin->register();
+
+        return $admin;
+    }
+}
