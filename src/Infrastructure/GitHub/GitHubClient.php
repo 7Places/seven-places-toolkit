@@ -17,15 +17,15 @@ final readonly class GitHubClient
     }
 
     /**
-     * Returns the latest release.
-     *
-     * @return array<string,mixed>
+     * Returns the configured repository.
      */
-    public function latestRelease(): array
+    public function repository(): string
     {
-        $repository = $this->app
-            ->metadata()
-            ->header('GitHubRepository');
+        $repository = trim(
+            $this->app
+                ->metadata()
+                ->header('GitHubRepository')
+        );
 
         if ($repository === '') {
             throw new RuntimeException(
@@ -33,20 +33,63 @@ final readonly class GitHubClient
             );
         }
 
+        return $repository;
+    }
+
+    /**
+     * Returns the latest published release.
+     *
+     * @return array<string,mixed>
+     */
+    public function latestRelease(): array
+    {
+        return $this->get(
+            '/repos/' . $this->repository() . '/releases/latest'
+        );
+    }
+
+    /**
+     * Returns a release by tag.
+     *
+     * @return array<string,mixed>
+     */
+    public function releaseByTag(string $tag): array
+    {
+        return $this->get(
+            '/repos/' . $this->repository() . '/releases/tags/' . rawurlencode($tag)
+        );
+    }
+
+    /**
+     * Returns repository information.
+     *
+     * @return array<string,mixed>
+     */
+    public function repositoryInfo(): array
+    {
+        return $this->get(
+            '/repos/' . $this->repository()
+        );
+    }
+
+    /**
+     * Executes a GitHub API GET request.
+     *
+     * @return array<string,mixed>
+     */
+    private function get(string $endpoint): array
+    {
         $response = $this->app
             ->http()
-            ->get(
-                self::API . '/repos/' . $repository . '/releases/latest'
-            );
+            ->get(self::API . $endpoint);
 
         if ($response->failed()) {
-          throw new RuntimeException(
-              sprintf(
-                  'GitHub API request to "%s" failed (%d).',
-                  $endpoint,
-                  $response->status()
-              )
-          );
+            throw new RuntimeException(
+                sprintf(
+                    'GitHub API request failed (%d).',
+                    $response->status()
+                )
+            );
         }
 
         $json = $response->json();
