@@ -3,7 +3,7 @@
  * Plugin Name: Seven Places Toolkit
  * Plugin URI: https://github.com/7Places/seven-places-toolkit
  * Description: Modern WordPress framework for reusable agency plugins.
- * Version: 0.1.6
+ * Version: 0.1.7
  * Requires at least: 6.8
  * Requires PHP: 8.2
  * Author: Seven Places Productions + Jamon Abercrombie
@@ -34,10 +34,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 register_activation_hook(
     __FILE__,
     static function (): void {
-        update_option(
-            'spt_admin_notice',
-            'activated'
-        );
+        Activator::activate(__FILE__);
     }
 );
 
