@@ -8,6 +8,7 @@ use SPT\Admin\AdminPageManager;
 use SPT\Services\AssetManager;
 use SPT\Services\SettingsManager;
 use SPT\Services\ViewManager;
+use SPT\Infrastructure\Http\HttpClient;
 
 final class ServiceLocator
 {
@@ -58,5 +59,12 @@ final class ServiceLocator
         $admin->register();
 
         return $admin;
+    }
+
+    public function http(): HttpClient
+    {
+        /** @var HttpClient */
+        return $this->instances[HttpClient::class]
+            ??= new HttpClient($this->app);
     }
 }

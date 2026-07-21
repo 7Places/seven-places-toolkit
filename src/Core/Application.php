@@ -9,6 +9,7 @@ use SPT\Modules\Diagnostics\DiagnosticsModule;
 use SPT\Services\AssetManager;
 use SPT\Services\SettingsManager;
 use SPT\Services\ViewManager;
+use SPT\Infrastructure\Http\HttpClient;
 
 final class Application
 {
@@ -144,6 +145,11 @@ final class Application
     public function views(): ViewManager
     {
         return $this->services->views();
+    }
+    
+    public function http(): HttpClient
+    {
+        return $this->services->http();
     }
 
     /*
