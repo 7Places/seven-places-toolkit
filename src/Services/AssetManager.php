@@ -86,7 +86,9 @@ final class AssetManager
     public function enqueueAdminAssets(string $hook): void
     {
         // Only load on our plugin page
-        if ($hook !== 'toplevel_page_seven-places-toolkit') {
+        if (
+            ! str_contains($hook, 'seven-places-toolkit')
+        ) {
             return;
         }
 

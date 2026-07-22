@@ -35,7 +35,7 @@ final class DiagnosticsModule implements ModuleInterface
                 capability: 'manage_options',
                 slug: 'spt-diagnostics',
                 callback: [$this, 'renderPage'],
-				parentSlug: AdminMenu::ROOT_SLUG,
+                parentSlug: AdminMenu::ROOT_SLUG,
             )
         );
     }
@@ -111,6 +111,7 @@ final class DiagnosticsModule implements ModuleInterface
         $this->app->views()->render(
             __DIR__ . '/views/diagnostics.php',
             [
+                'app'         => $this->app,
                 'diagnostics' => $this->diagnostics(),
             ]
         );

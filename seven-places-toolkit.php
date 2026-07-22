@@ -16,7 +16,11 @@
  */
 
 declare(strict_types=1);
+
 use SPT\Lifecycle\Activator;
+define('SPT_PATH', plugin_dir_path(__FILE__));
+define('SPT_URL', plugin_dir_url(__FILE__));
+
 if (! defined('ABSPATH')) {
     exit;
 }
