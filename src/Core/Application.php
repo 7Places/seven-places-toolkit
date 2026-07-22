@@ -27,13 +27,14 @@ final class Application
 
     private readonly ServiceLocator $services;
 
+    private readonly string $pluginPath;
+
     private function __construct(string $pluginFile)
     {
         $this->metadata = new PluginMetadata($pluginFile);
-
         $this->moduleRegistry = new ModuleRegistry();
-
         $this->services = new ServiceLocator($this);
+        $this->pluginPath = $this->metadata->pluginDirectory();
     }
 
     public static function boot(string $pluginFile): self
@@ -132,6 +133,11 @@ final class Application
         return $this->metadata->textDomain();
     }
 
+    public function path(string $path = ''): string
+    {
+        return $this->pluginPath . ltrim($path, '/');
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Services
@@ -198,4 +204,5 @@ final class Application
     {
         return $this->pluginUrl() . 'assets/' . ltrim($asset, '/');
     }
+
 }

@@ -40,8 +40,6 @@ final class SettingsModule implements ModuleInterface
             [
                 'app'      => $this->app,
                 'settings' => $this->app->settings(),
-                'version'  => $this->app->version(),
-                'logo_url' => $this->app->assetUrl('images/7places-circle.jpg'),
             ]
         );
     }

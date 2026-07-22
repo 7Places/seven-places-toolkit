@@ -6,7 +6,7 @@ declare(strict_types=1);
 
 <div class="wrap">
 
-<h1>Seven Places Toolkit Diagnostics</h1>
+<?php require $app->path('src/Views/partials/admin-header.php'); ?>
 
 <h2 class="title">Framework</h2>
 

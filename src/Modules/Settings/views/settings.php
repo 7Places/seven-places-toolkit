@@ -9,19 +9,7 @@ settings_errors('spt');
 
 <div class="wrap">
 
-  <div class="spt-header">
-      <img src="<?= esc_url($logo_url); ?>" alt="Seven Places Toolkit">
-
-      <div class="spt-header-content">
-          <h1>Seven Places Toolkit</h1>
-
-          <p>Modular utilities for WordPress developers.</p>
-
-          <span class="spt-version">
-              Version <?= esc_html($version); ?>
-          </span>
-      </div>
-  </div>
+  <?php require $app->path('src/Views/partials/admin-header.php'); ?>
 
     <form method="post">
 
