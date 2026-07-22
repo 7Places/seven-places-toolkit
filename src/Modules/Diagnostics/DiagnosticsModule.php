@@ -115,6 +115,16 @@ final class DiagnosticsModule implements ModuleInterface
                 'diagnostics' => $this->diagnostics(),
             ]
         );
+        if (
+            isset($_POST['spt_clear_github_cache']) &&
+            check_admin_referer('spt_clear_github_cache')
+        ) {
+            $this->app->github()->clearCache();
+
+            delete_site_transient('update_plugins');
+
+            echo '<div class="notice notice-success"><p>GitHub cache cleared.</p></div>';
+        }        
     }
 
 
