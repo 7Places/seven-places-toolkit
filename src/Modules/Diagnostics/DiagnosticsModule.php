@@ -7,6 +7,7 @@ namespace SPT\Modules\Diagnostics;
 use SPT\Contracts\ModuleInterface;
 use SPT\Core\Application;
 use SPT\Admin\AdminPage;
+use SPT\Admin\AdminMenu;
 
 final class DiagnosticsModule implements ModuleInterface
 {
@@ -34,6 +35,7 @@ final class DiagnosticsModule implements ModuleInterface
                 capability: 'manage_options',
                 slug: 'spt-diagnostics',
                 callback: [$this, 'renderPage'],
+				parentSlug: AdminMenu::ROOT_SLUG,
             )
         );
     }

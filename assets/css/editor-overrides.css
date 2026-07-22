@@ -1,0 +1,18 @@
+html :where(.wp-block),
+.editor-styles-wrapper .is-layout-constrained > :not(.alignleft):not(.alignright):not(.alignfull) {
+    max-width: none !important;
+}
+
+.wp-block-post-content,
+.editor-styles-wrapper .wp-block-post-content {
+    max-width: 100% !important;
+    width: 100% !important;
+}
+
+.editor-styles-wrapper .is-layout-constrained > .alignwide {
+    max-width: 1400px !important;
+}
+
+.editor-styles-wrapper .is-layout-constrained > .alignfull {
+    max-width: 100% !important;
+}

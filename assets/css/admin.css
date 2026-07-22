@@ -1,0 +1,37 @@
+.spt-header {
+    display:flex;
+    align-items:center;
+    gap:24px;
+    margin:24px 0 32px;
+    padding:24px;
+    background:#fff;
+    border:1px solid #dcdcde;
+    border-radius:8px;
+}
+
+.spt-header img{
+    width:90px;
+    height:90px;
+    border-radius:50%;
+}
+
+.spt-header h1{
+    margin:0;
+    font-size:28px;
+    font-weight:600;
+}
+
+.spt-header p{
+    margin:8px 0;
+    color:#50575e;
+}
+
+.spt-version{
+    display:inline-block;
+    margin-top:6px;
+    padding:3px 10px;
+    border-radius:999px;
+    background:#f0f0f1;
+    font-size:12px;
+    font-weight:600;
+}

@@ -14,6 +14,8 @@ use SPT\Infrastructure\GitHub\GitHubClient;
 use SPT\Infrastructure\GitHub\GitHubUpdater;
 use SPT\Infrastructure\GitHub\WordPressUpdater;
 use SPT\Infrastructure\GitHub\GitHubInstaller;
+use SPT\Modules\Settings\SettingsModule;
+use SPT\Modules\Editor\EditorModule;
 
 final class Application
 {
@@ -54,6 +56,7 @@ final class Application
 
     public function initialize(): void
     {
+        $this->assets()->register();
         $this->wordPressUpdater()->register();
         $this->installer()->register();
         $this->registerModules();
@@ -72,6 +75,8 @@ final class Application
     private function modules(): array
     {
         return [
+            new SettingsModule($this),
+            new EditorModule($this),
             new DiagnosticsModule($this),
         ];
     }
