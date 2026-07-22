@@ -8,6 +8,20 @@ declare(strict_types=1);
 
 <?php require $app->path('src/Views/partials/admin-header.php'); ?>
 
+<form method="post">
+    <?php wp_nonce_field('spt_clear_github_cache'); ?>
+
+    <p>
+        <button
+            class="button button-secondary"
+            type="submit"
+            name="spt_clear_github_cache"
+            value="1">
+            Clear GitHub Cache
+        </button>
+    </p>
+</form>
+
 <h2 class="title">Framework</h2>
 
 <table class="widefat striped">

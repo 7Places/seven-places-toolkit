@@ -14,7 +14,7 @@ final readonly class GitHubClient
     /**
      * Default cache lifetime (6 hours).
      */
-    private const DEFAULT_CACHE_TTL = 6 * HOUR_IN_SECONDS;
+    private const DEFAULT_CACHE_TTL = 5 * MINUTE_IN_SECONDS;
 
     public function __construct(
         private Application $app,
@@ -145,19 +145,21 @@ final readonly class GitHubClient
      */
     private function get(string $endpoint): array
     {
-        $response = $this->app
-            ->http()
-            ->withHeaders([
-                'Accept' => 'application/vnd.github+json',
-                'User-Agent' => sprintf(
-                    '%s/%s',
-                    $this->app->slug(),
-                    $this->app->version()
-                ),
-            ])
-            ->get(
-                self::API . $endpoint
-            );
+      $response = $this->app
+          ->http()
+          ->get(
+              self::API . $endpoint,
+              [
+                  'headers' => [
+                      'Accept'     => 'application/vnd.github+json',
+                      'User-Agent' => sprintf(
+                          '%s/%s',
+                          $this->app->slug(),
+                          $this->app->version()
+                      ),
+                  ],
+              ]
+          );
 
         if ($response->failed()) {
             throw new RuntimeException(
