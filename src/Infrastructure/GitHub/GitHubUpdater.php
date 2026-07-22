@@ -15,13 +15,11 @@ final readonly class GitHubUpdater
 
     public function check(): UpdateInfo
     {
-        $currentVersion = $this->app
-            ->metadata()
-            ->version();
-
         $release = $this->app
             ->github()
             ->latestRelease();
+
+        $currentVersion = $this->app->version();
 
         $latestVersion = ltrim(
             (string) ($release['tag_name'] ?? ''),
@@ -29,14 +27,14 @@ final readonly class GitHubUpdater
         );
 
         return new UpdateInfo(
-            currentVersion: $this->app->version(),
+            available: version_compare($latestVersion, $currentVersion, '>'),
+            currentVersion: $currentVersion,
             latestVersion: $latestVersion,
-            available: version_compare($latestVersion, $this->app->version(), '>'),
+            releaseName: (string) ($release['name'] ?? $latestVersion),
             downloadUrl: (string) ($release['zipball_url'] ?? ''),
             releaseUrl: (string) ($release['html_url'] ?? ''),
             publishedAt: (string) ($release['published_at'] ?? ''),
             releaseNotes: (string) ($release['body'] ?? ''),
         );
     }
-
 }

@@ -72,7 +72,7 @@ final readonly class WordPressUpdater
             'url'         => $update->releaseUrl(),
             'package'     => $update->downloadUrl(),
         ];
-
+        
         return $transient;
     }
 
