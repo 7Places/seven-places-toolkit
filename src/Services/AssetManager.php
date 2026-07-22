@@ -74,4 +74,25 @@ final class AssetManager
             $args,
         );
     }
+
+    public function register(): void
+    {
+        add_action(
+            'admin_enqueue_scripts',
+            [$this, 'enqueueAdminAssets']
+        );
+    }
+
+    public function enqueueAdminAssets(string $hook): void
+    {
+        // Only load on our plugin page
+        if ($hook !== 'toplevel_page_seven-places-toolkit') {
+            return;
+        }
+
+        $this->enqueueStyle(
+            'spt-admin',
+            'css/admin.css'
+        );
+    }
 }

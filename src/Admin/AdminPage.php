@@ -17,6 +17,7 @@ final class AdminPage
         public readonly string $capability,
         public readonly string $slug,
         public readonly mixed $callback,
+        public readonly ?string $parentSlug = null,
         public readonly string $icon = 'dashicons-admin-generic',
         public readonly ?int $position = null,
     ) {
@@ -25,5 +26,13 @@ final class AdminPage
                 'Admin page callback must be callable.'
             );
         }
+    }
+
+    /**
+     * Determine whether this page is a submenu.
+     */
+    public function isSubmenu(): bool
+    {
+        return $this->parentSlug !== null;
     }
 }

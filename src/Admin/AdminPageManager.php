@@ -28,6 +28,21 @@ final class AdminPageManager
     public function registerPages(): void
     {
         foreach ($this->pages as $page) {
+
+            if ($page->isSubmenu()) {
+
+                add_submenu_page(
+                    parent_slug: $page->parentSlug,
+                    page_title: $page->title,
+                    menu_title: $page->menuTitle,
+                    capability: $page->capability,
+                    menu_slug: $page->slug,
+                    callback: $page->callback,
+                );
+
+                continue;
+            }
+
             add_menu_page(
                 page_title: $page->title,
                 menu_title: $page->menuTitle,
@@ -36,6 +51,19 @@ final class AdminPageManager
                 callback: $page->callback,
                 icon_url: $page->icon,
                 position: $page->position,
+            );
+
+            /**
+             * Replace WordPress' duplicated first submenu with a
+             * "General" entry that points to the root page.
+             */
+            add_submenu_page(
+                parent_slug: $page->slug,
+                page_title: 'General',
+                menu_title: 'General',
+                capability: $page->capability,
+                menu_slug: $page->slug,
+                callback: $page->callback,
             );
         }
     }

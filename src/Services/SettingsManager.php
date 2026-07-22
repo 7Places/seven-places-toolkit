@@ -22,7 +22,10 @@ final class SettingsManager
      */
     private function options(): array
     {
-        $options = get_option(self::OPTION_NAME, []);
+        $options = get_option(
+            self::OPTION_NAME,
+            []
+        );
 
         return is_array($options)
             ? $options
@@ -39,15 +42,19 @@ final class SettingsManager
         return $this->options();
     }
 
+    /**
+     * Get a setting.
+     */
     public function get(
         string $key,
         mixed $default = null,
     ): mixed {
-        $options = $this->options();
-
-        return $options[$key] ?? $default;
+        return $this->options()[$key] ?? $default;
     }
 
+    /**
+     * Store a setting.
+     */
     public function set(
         string $key,
         mixed $value,
@@ -62,6 +69,9 @@ final class SettingsManager
         );
     }
 
+    /**
+     * Remove a setting.
+     */
     public function forget(
         string $key,
     ): bool {
@@ -72,6 +82,50 @@ final class SettingsManager
         return update_option(
             self::OPTION_NAME,
             $options
+        );
+    }
+
+    /**
+     * Determine whether a setting exists.
+     */
+    public function has(string $key): bool
+    {
+        return array_key_exists(
+            $key,
+            $this->options()
+        );
+    }
+
+    /**
+     * Determine whether a feature is enabled.
+     */
+    public function enabled(string $feature): bool
+    {
+        return (bool) $this->get(
+            $feature,
+            false
+        );
+    }
+
+    /**
+     * Enable a feature.
+     */
+    public function enable(string $feature): bool
+    {
+        return $this->set(
+            $feature,
+            true
+        );
+    }
+
+    /**
+     * Disable a feature.
+     */
+    public function disable(string $feature): bool
+    {
+        return $this->set(
+            $feature,
+            false
         );
     }
 }
