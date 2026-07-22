@@ -54,8 +54,9 @@ final readonly class WordPressUpdater
             $update = $this->app
                 ->updater()
                 ->check();
-        } catch (\Throwable) {
-            return $transient;
+        } catch (\Throwable $e) {
+          $this->logException($e);
+          return $transient;
         }
 
         if (!$update->available()) {
@@ -95,8 +96,9 @@ final readonly class WordPressUpdater
             $update = $this->app
                 ->updater()
                 ->check();
-        } catch (\Throwable) {
-            return $result;
+        } catch (\Throwable $e) {
+          $this->logException($e);
+          return $result;
         }
 
         return (object) [
@@ -120,6 +122,21 @@ final readonly class WordPressUpdater
      * @param \WP_Upgrader       $upgrader
      * @param array<string,mixed> $options
      */
+     private function logException(\Throwable $e): void
+     {
+         if (defined('WP_DEBUG') && WP_DEBUG) {
+             error_log(
+                 sprintf(
+                     '[SPT Updater] %s: %s in %s:%d',
+                     get_class($e),
+                     $e->getMessage(),
+                     $e->getFile(),
+                     $e->getLine()
+                 )
+             );
+         }
+     }
+
     public function clearGitHubCache(
         \WP_Upgrader $upgrader,
         array $options,
